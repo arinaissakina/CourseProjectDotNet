@@ -26,7 +26,7 @@ namespace CourseProject.Controllers
         }
 
         // GET: User/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -34,7 +34,7 @@ namespace CourseProject.Controllers
             }
 
             var user = await _context.AllUsers
-                .FirstOrDefaultAsync(m => m.UserId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace CourseProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Name")] User user)
+        public async Task<IActionResult> Create([Bind("Name,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace CourseProject.Controllers
         }
 
         // GET: User/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -86,9 +86,9 @@ namespace CourseProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("UserId,Name")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Name,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
         {
-            if (id != user.UserId)
+            if (id != user.Id)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace CourseProject.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.UserId))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -117,7 +117,7 @@ namespace CourseProject.Controllers
         }
 
         // GET: User/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -125,7 +125,7 @@ namespace CourseProject.Controllers
             }
 
             var user = await _context.AllUsers
-                .FirstOrDefaultAsync(m => m.UserId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -137,7 +137,7 @@ namespace CourseProject.Controllers
         // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _context.AllUsers.FindAsync(id);
             _context.AllUsers.Remove(user);
@@ -145,9 +145,9 @@ namespace CourseProject.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(long id)
+        private bool UserExists(string id)
         {
-            return _context.AllUsers.Any(e => e.UserId == id);
+            return _context.AllUsers.Any(e => e.Id == id);
         }
     }
 }

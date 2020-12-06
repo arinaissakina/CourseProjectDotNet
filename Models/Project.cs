@@ -24,7 +24,7 @@ namespace CourseProject.Models
 
         [Required]
         [DisplayName("Owner Id")]
-        public long OwnerId { get; set; }
+        public string OwnerId { get; set; }
 
         [ForeignKey("OwnerId")]
         public User Owner { get; set; }

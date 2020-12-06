@@ -1,19 +1,17 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace CourseProject.Models
 {
-    public class User 
+    public class User : IdentityUser
     {
         public User()
         {
         }
         
-        [Key]
-        public long UserId { get; set; }
-
         [Required]
         [DisplayName("Full Name")]
         public string Name { get; set; }

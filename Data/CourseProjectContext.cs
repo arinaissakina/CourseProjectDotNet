@@ -1,10 +1,12 @@
 using System.Text.RegularExpressions;
 using CourseProject.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Data
 {
-    public class CourseProjectContext : DbContext
+    public class CourseProjectContext : IdentityDbContext<IdentityUser>
     {
         public CourseProjectContext(DbContextOptions<CourseProjectContext> options) : base(options)
         {

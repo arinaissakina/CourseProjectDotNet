@@ -20,7 +20,7 @@ namespace CourseProject.Models
 
         [Required]
         [DisplayName("Member Id")]
-        public long MemberId { get; set; }
+        public string MemberId { get; set; }
         
         [ForeignKey("MemberId")]
         public User Member { get; set; }
