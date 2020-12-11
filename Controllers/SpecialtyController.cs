@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
+using CourseProject.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseProject.Controllers
 {
+    [Authorize(Roles="Admin")]
     public class SpecialtyController : Controller
     {
-        private readonly CourseProjectContext _context;
+        private readonly SpecialtyService _specialtyService;
 
-        public SpecialtyController(CourseProjectContext context)
+        public SpecialtyController(SpecialtyService specialtyService)
         {
-            _context = context;
+            _specialtyService = specialtyService;
         }
 
         // GET: Specialty
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Specialties.ToListAsync());
+            return View(await _specialtyService.GetSpecialties());
         }
 
         // GET: Specialty/Details/5
@@ -33,8 +36,7 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
 
-            var specialty = await _context.Specialties
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var specialty = await _specialtyService.GetSpecialty(id);
             if (specialty == null)
             {
                 return NotFound();
@@ -58,8 +60,7 @@ namespace CourseProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(specialty);
-                await _context.SaveChangesAsync();
+                await _specialtyService.CreateSpecialty(specialty);
                 return RedirectToAction(nameof(Index));
             }
             return View(specialty);
@@ -73,7 +74,7 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
 
-            var specialty = await _context.Specialties.FindAsync(id);
+            var specialty = await _specialtyService.GetSpecialty(id);
             if (specialty == null)
             {
                 return NotFound();
@@ -97,8 +98,7 @@ namespace CourseProject.Controllers
             {
                 try
                 {
-                    _context.Update(specialty);
-                    await _context.SaveChangesAsync();
+                    await _specialtyService.EditSpecialty(specialty);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +124,7 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
 
-            var specialty = await _context.Specialties
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var specialty = await _specialtyService.GetSpecialty(id);
             if (specialty == null)
             {
                 return NotFound();
@@ -139,15 +138,14 @@ namespace CourseProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var specialty = await _context.Specialties.FindAsync(id);
-            _context.Specialties.Remove(specialty);
-            await _context.SaveChangesAsync();
+            var specialty = await _specialtyService.GetSpecialty(id);
+            await _specialtyService.DeleteSpecialty(specialty);
             return RedirectToAction(nameof(Index));
         }
 
         private bool SpecialtyExists(long id)
         {
-            return _context.Specialties.Any(e => e.Id == id);
+            return _specialtyService.SpecialtyExist(id);
         }
     }
 }

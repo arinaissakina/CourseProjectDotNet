@@ -8,9 +8,6 @@ namespace CourseProject.Models
 {
     public class User : IdentityUser
     {
-        public User()
-        {
-        }
         
         [Required]
         [DisplayName("Full Name")]

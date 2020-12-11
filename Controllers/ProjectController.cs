@@ -7,23 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CourseProject.Data;
 using CourseProject.Models;
+using CourseProject.Services;
 
 namespace CourseProject.Controllers
 {
     public class ProjectController : Controller
     {
+        private readonly ProjectService _projectService;
         private readonly CourseProjectContext _context;
 
-        public ProjectController(CourseProjectContext context)
+        public ProjectController(CourseProjectContext context, ProjectService projectService)
         {
             _context = context;
+            _projectService = projectService;
         }
 
         // GET: Project
         public async Task<IActionResult> Index()
         {
-            var courseProjectContext = _context.Projects.Include(p => p.Owner);
-            return View(await courseProjectContext.ToListAsync());
+            var projects = await _projectService.GetProjects();
+            return View(projects);
         }
 
         // GET: Project/Details/5
@@ -34,9 +37,7 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .Include(p => p.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var project = await _projectService.GetProject(id);
             if (project == null)
             {
                 return NotFound();
@@ -48,7 +49,7 @@ namespace CourseProject.Controllers
         // GET: Project/Create
         public IActionResult Create()
         {
-            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "UserId", "Name");
+            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "Id", "Name");
             return View();
         }
 
@@ -61,11 +62,10 @@ namespace CourseProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(project);
-                await _context.SaveChangesAsync();
+                await _projectService.CreateProject(project);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "UserId", "Name", project.OwnerId);
+            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "Id", "Name", project.OwnerId);
             return View(project);
         }
 
@@ -77,12 +77,12 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _projectService.GetProject(id);
             if (project == null)
             {
                 return NotFound();
             }
-            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "UserId", "Name", project.OwnerId);
+            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "Id", "Name", project.OwnerId);
             return View(project);
         }
 
@@ -102,8 +102,7 @@ namespace CourseProject.Controllers
             {
                 try
                 {
-                    _context.Update(project);
-                    await _context.SaveChangesAsync();
+                    await _projectService.EditProject(project);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,7 +117,7 @@ namespace CourseProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "UserId", "Name", project.OwnerId);
+            ViewData["OwnerId"] = new SelectList(_context.AllUsers, "Id", "Name", project.OwnerId);
             return View(project);
         }
 
@@ -130,9 +129,7 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .Include(p => p.Owner)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var project = await _projectService.GetProject(id);
             if (project == null)
             {
                 return NotFound();
@@ -146,15 +143,14 @@ namespace CourseProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            var project = await _context.Projects.FindAsync(id);
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
+            var project = await _projectService.GetProject(id);
+            await _projectService.DeleteProject(project);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProjectExists(long id)
         {
-            return _context.Projects.Any(e => e.Id == id);
+            return _projectService.ProjectExist(id);
         }
     }
 }

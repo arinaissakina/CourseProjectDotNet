@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CourseProject.Data;
+using CourseProject.Models;
+using CourseProject.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +23,7 @@ namespace CourseProject
             Configuration = configuration;
         }
 
-        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        /*private async Task CreateUserRoles(IServiceProvider serviceProvider)
         {
             var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var UserManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
@@ -39,7 +41,7 @@ namespace CourseProject
             //login id for Admin management
             IdentityUser user = await UserManager.FindByEmailAsync("admin@email.com");
             await UserManager.AddToRoleAsync(user, "Admin");
-        }
+        }*/
 
         
         public IConfiguration Configuration { get; }
@@ -52,13 +54,23 @@ namespace CourseProject
                 options.UseSqlite("Filename=CourseProject.db");
             });
             
+            
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<CourseProjectContext>();
+            
+            
             services.AddMvc(option => option.EnableEndpointRouting = false); 
+            
+            services.AddScoped<ProjectService>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<SpecialtyService>();
+            services.AddScoped<ISpecialtyRepository, SpecialtyRepository>();
            
             
             // identity
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            /*services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<CourseProjectContext>();
+                .AddEntityFrameworkStores<CourseProjectContext>();*/
             
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -84,7 +96,7 @@ namespace CourseProject
                     template: "{controller=Main}/{action=Index}/{id?}");
             });
             
-            CreateUserRoles(serviceProvider).Wait();
+            //CreateUserRoles(serviceProvider).Wait();
             
 
             app.UseStaticFiles();

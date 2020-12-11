@@ -50,7 +50,7 @@ namespace CourseProject.Controllers
         public IActionResult Create()
         {
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name");
-            ViewData["UserId"] = new SelectList(_context.AllUsers, "UserId", "Name");
+            ViewData["UserId"] = new SelectList(_context.AllUsers, "Id", "Id");
             return View();
         }
 
@@ -68,7 +68,7 @@ namespace CourseProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name", specialtyUser.SpecialtyId);
-            ViewData["UserId"] = new SelectList(_context.AllUsers, "UserId", "Name", specialtyUser.UserId);
+            ViewData["UserId"] = new SelectList(_context.AllUsers, "Id", "Name", specialtyUser.UserId);
             return View(specialtyUser);
         }
 
@@ -86,7 +86,7 @@ namespace CourseProject.Controllers
                 return NotFound();
             }
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name", specialtyUser.SpecialtyId);
-            ViewData["UserId"] = new SelectList(_context.AllUsers, "UserId", "Name", specialtyUser.UserId);
+            ViewData["UserId"] = new SelectList(_context.AllUsers, "Id", "Id", specialtyUser.UserId);
             return View(specialtyUser);
         }
 
@@ -123,7 +123,7 @@ namespace CourseProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name", specialtyUser.SpecialtyId);
-            ViewData["UserId"] = new SelectList(_context.AllUsers, "UserId", "Name", specialtyUser.UserId);
+            ViewData["UserId"] = new SelectList(_context.AllUsers, "Id", "Id", specialtyUser.UserId);
             return View(specialtyUser);
         }
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CourseProject.Data
 {
-    public class CourseProjectContext : IdentityDbContext<IdentityUser>
+    public class CourseProjectContext : IdentityDbContext<User>
     {
         public CourseProjectContext(DbContextOptions<CourseProjectContext> options) : base(options)
         {

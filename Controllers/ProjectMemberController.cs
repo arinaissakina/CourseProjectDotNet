@@ -49,7 +49,7 @@ namespace CourseProject.Controllers
         // GET: ProjectMember/Create
         public IActionResult Create()
         {
-            ViewData["MemberId"] = new SelectList(_context.AllUsers, "UserId", "Name");
+            ViewData["MemberId"] = new SelectList(_context.AllUsers, "Id", "Name");
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description");
             return View();
         }
@@ -67,7 +67,7 @@ namespace CourseProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.AllUsers, "UserId", "Name", projectMember.MemberId);
+            ViewData["MemberId"] = new SelectList(_context.AllUsers, "Id", "Name", projectMember.MemberId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", projectMember.ProjectId);
             return View(projectMember);
         }
@@ -85,7 +85,7 @@ namespace CourseProject.Controllers
             {
                 return NotFound();
             }
-            ViewData["MemberId"] = new SelectList(_context.AllUsers, "UserId", "Name", projectMember.MemberId);
+            ViewData["MemberId"] = new SelectList(_context.AllUsers, "Id", "Name", projectMember.MemberId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", projectMember.ProjectId);
             return View(projectMember);
         }
@@ -122,7 +122,7 @@ namespace CourseProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MemberId"] = new SelectList(_context.AllUsers, "UserId", "Name", projectMember.MemberId);
+            ViewData["MemberId"] = new SelectList(_context.AllUsers, "Id", "Name", projectMember.MemberId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", projectMember.ProjectId);
             return View(projectMember);
         }
