@@ -14,6 +14,7 @@ namespace CourseProject.Models
         public long Id { get; set; }
 
         [Required]
+        [StringLength(15, ErrorMessage = "Specialty name can't be more than 15 symbols.")]
         [DisplayName("Specialty Name")]
         
         public string Name { get; set; }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CourseProject.Models
 {
-    public class Project
+    public class Project : IValidatableObject
     {
         public Project()
         {
@@ -34,6 +34,14 @@ namespace CourseProject.Models
         
         [DisplayName("List of Specialties")]
         public IList<Specialty> Specialties { get; set; }
+        
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Name.Length > 30)
+            {
+                yield return new ValidationResult("Project name can't be more then 30 symbols.");
+            }
+        }
 
     }
 }

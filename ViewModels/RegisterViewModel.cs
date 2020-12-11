@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CourseProject.Models;
 
 namespace CourseProject.ViewModels
 {
@@ -9,6 +10,7 @@ namespace CourseProject.ViewModels
         public string Email { get; set; }
  
         [Required]
+        [NotContainsDigits]
         [Display(Name = "Full name")]
         public string Name { get; set; }
  
